@@ -47,7 +47,7 @@ struct ContentView: View {
                     Button("Start Game") {
                         startGame()
                     }
-                    .buttonStyle(CustomButtonStyle(color: .green))
+                    .buttonStyle(CustomButtonStyle(color: .blue))
                 }
             }
         }
