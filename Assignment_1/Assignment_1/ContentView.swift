@@ -12,7 +12,7 @@ struct ContentView: View {
     var body: some View {
         VStack(spacing: 30) {
             if gameStarted {
-                Text("Is this a number prime?")
+                Text("Is this number prime?")
                     .font(.largeTitle)
                     .bold()
                 
@@ -20,13 +20,13 @@ struct ContentView: View {
                     .font(.system(size: 80, weight: .bold))
                     .padding()
                 
-                HStack {
-                    Button(" This is a Prime Number") {
+                VStack(spacing: 20) {
+                    Button("This is a Prime Number") {
                         checkAnswer(isPrime: true)
                     }
                     .buttonStyle(CustomButtonStyle(color: .blue))
                     
-                    Button("This is Not Prime a Number") {
+                    Button("This is Not a Prime Number") {
                         checkAnswer(isPrime: false)
                     }
                     .buttonStyle(CustomButtonStyle(color: .red))
