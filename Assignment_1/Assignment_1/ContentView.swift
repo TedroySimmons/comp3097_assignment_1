@@ -31,12 +31,12 @@ struct ContentView: View {
                     }
                     .buttonStyle(CustomButtonStyle(color: .red))
                 }
-                
                 if let isCorrect = isCorrect {
                     Image(systemName: isCorrect ? "checkmark.circle.fill" : "xmark.circle.fill")
                         .resizable()
                         .frame(width: 80, height: 80)
                         .foregroundColor(isCorrect ? .green : .red)
+                        .transition(.scale)
                 }
             } else {
                 VStack {
@@ -67,6 +67,7 @@ struct ContentView: View {
         correctCount = 0
         wrongCount = 0
         number = Int.random(in: 1...100)
+        isCorrect = nil
         startTimer()
     }
 
@@ -87,13 +88,18 @@ struct ContentView: View {
         }
 
         attempts += 1
-        nextNumber()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            nextNumber()
+        }
     }
 
     func handleTimeout() {
         wrongCount += 1
         attempts += 1
-        nextNumber()
+        isCorrect = false
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            nextNumber()
+        }
     }
 
     func nextNumber() {
