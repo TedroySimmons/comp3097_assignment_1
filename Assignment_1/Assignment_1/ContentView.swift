@@ -33,7 +33,6 @@ struct ContentView: View {
                 
             }
         func isNumberPrime( num: Int) -> Bool {
-            if num < 2 { return false }
             for i in 2..<num {
                 if num % i == 0 {
                     return false
