@@ -29,8 +29,14 @@ struct ContentView: View {
                 }
                 .buttonStyle(CustomButtonStyle(color: .red))
             }
+        func startTimer() {
+            timer?.invalidate()
+            timer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) {  in
+                handleTimeout()
+            }
         }
-    func checkAnswer(isPrime: Bool) {
+
+        func checkAnswer(isPrime: Bool) {
             if isPrime == isNumberPrime(number) {
                 correctCount += 1
                 isCorrect = true
@@ -40,18 +46,40 @@ struct ContentView: View {
             }
 
             attempts += 1
+            nextNumber()
         }
-    func isNumberPrime( num: Int) -> Bool {
-        if num < 2 { return false }
-        for i in 2..<num {
-            if num % i == 0 {
-                return false
+
+        func handleTimeout() {
+            wrongCount += 1
+            attempts += 1
+            nextNumber()
+        }
+
+        func nextNumber() {
+            number = Int.random(in: 1...100)
+            isCorrect = nil
+            if attempts >= 10 {
+                timer?.invalidate()
             }
         }
-        return true
+
+        func resetGame() {
+            correctCount = 0
+            wrongCount = 0
+            attempts = 0
+            nextNumber()
+            startTimer()
+        }
+        func isNumberPrime( num: Int) -> Bool {
+            if num < 2 { return false }
+            for i in 2..<num {
+                if num % i == 0 {
+                    return false
+                }
+            }
+            return true
+        }
     }
-}
-    
 struct CustomButtonStyle: ButtonStyle {
     var color: Color
 
