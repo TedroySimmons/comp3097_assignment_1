@@ -1,44 +1,58 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var gameStarted = false
     @State private var number = Int.random(in: 1...100)
     @State private var isCorrect: Bool? = nil
     @State private var correctCount = 0
     @State private var wrongCount = 0
     @State private var attempts = 0
     @State private var timer: Timer?
-    
+
     var body: some View {
         VStack(spacing: 30) {
-            Text("Is this number prime?")
-                .font(.largeTitle)
-                .bold()
-            
-            Text("\(number)")
-                .font(.system(size: 80, weight: .bold))
-                .padding()
-            
-            HStack {
-                Button("Prime") {
-                    checkAnswer(isPrime: true)
-                }
-                .buttonStyle(CustomButtonStyle(color: .blue))
+            if gameStarted {
+                Text("Is this number prime?")
+                    .font(.largeTitle)
+                    .bold()
                 
-                Button("Not Prime") {
-                    checkAnswer(isPrime: false)
+                Text("\(number)")
+                    .font(.system(size: 80, weight: .bold))
+                    .padding()
+                
+                HStack {
+                    Button("Prime") {
+                        checkAnswer(isPrime: true)
+                    }
+                    .buttonStyle(CustomButtonStyle(color: .blue))
+                    
+                    Button("Not Prime") {
+                        checkAnswer(isPrime: false)
+                    }
+                    .buttonStyle(CustomButtonStyle(color: .red))
                 }
-                .buttonStyle(CustomButtonStyle(color: .red))
-            }
-            
-            if let isCorrect = isCorrect {
-                Image(systemName: isCorrect ? "checkmark.circle.fill" : "xmark.circle.fill")
-                    .resizable()
-                    .frame(width: 80, height: 80)
-                    .foregroundColor(isCorrect ? .green : .red)
+                
+                if let isCorrect = isCorrect {
+                    Image(systemName: isCorrect ? "checkmark.circle.fill" : "xmark.circle.fill")
+                        .resizable()
+                        .frame(width: 80, height: 80)
+                        .foregroundColor(isCorrect ? .green : .red)
+                }
+            } else {
+                VStack {
+                    Text("Prime Number Game!")
+                        .font(.title)
+                        .padding()
+                    
+                    Button("Start Game") {
+                        startGame()
+                    }
+                    .buttonStyle(CustomButtonStyle(color: .green))
+                }
             }
         }
         .onAppear {
-            startTimer()
+            timer?.invalidate()
         }
         .alert("Game Over", isPresented: .constant(attempts >= 10)) {
             Button("Restart", action: resetGame)
@@ -46,14 +60,23 @@ struct ContentView: View {
             Text("Correct: \(correctCount)\nWrong: \(wrongCount)")
         }
     }
-    
+
+    func startGame() {
+        gameStarted = true
+        attempts = 0
+        correctCount = 0
+        wrongCount = 0
+        number = Int.random(in: 1...100)
+        startTimer()
+    }
+
     func startTimer() {
         timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { _ in
             handleTimeout()
         }
     }
-    
+
     func checkAnswer(isPrime: Bool) {
         if isPrime == isNumberPrime(number) {
             correctCount += 1
@@ -62,33 +85,31 @@ struct ContentView: View {
             wrongCount += 1
             isCorrect = false
         }
-        
+
         attempts += 1
         nextNumber()
     }
-    
+
     func handleTimeout() {
         wrongCount += 1
         attempts += 1
         nextNumber()
     }
-    
+
     func nextNumber() {
-        number = Int.random(in: 1...100)
-        isCorrect = nil
         if attempts >= 10 {
             timer?.invalidate()
+        } else {
+            number = Int.random(in: 1...100)
+            isCorrect = nil
         }
     }
-    
+
     func resetGame() {
-        correctCount = 0
-        wrongCount = 0
-        attempts = 0
-        nextNumber()
-        startTimer()
+        gameStarted = false
+        timer?.invalidate()
     }
-    
+
     func isNumberPrime(_ num: Int) -> Bool {
         if num < 2 { return false }
         for i in 2..<num {
@@ -102,7 +123,7 @@ struct ContentView: View {
 
 struct CustomButtonStyle: ButtonStyle {
     var color: Color
-    
+
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .padding()
