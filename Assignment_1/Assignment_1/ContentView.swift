@@ -10,7 +10,7 @@ struct ContentView: View {
     
     var body: some View {
         VStack(spacing: 30) {
-            Text("Is this number prime?")
+            Text("Is this a number prime?")
                 .font(.largeTitle)
                 .bold()
             
@@ -28,18 +28,9 @@ struct ContentView: View {
                     checkAnswer(isPrime: false)
                 }
                 .buttonStyle(CustomButtonStyle(color: .red))
-            }
         }
         func checkAnswer(isPrime: Bool) {
-                if isPrime == isNumberPrime(number) {
-                    correctCount += 1
-                    isCorrect = true
-                } else {
-                    wrongCount += 1
-                    isCorrect = false
-                }
-
-                attempts += 1
+                
             }
         func isNumberPrime( num: Int) -> Bool {
             if num < 2 { return false }
