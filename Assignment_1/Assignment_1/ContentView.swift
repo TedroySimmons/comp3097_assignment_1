@@ -31,6 +31,7 @@ struct ContentView: View {
                     }
                     .buttonStyle(CustomButtonStyle(color: .red))
                 }
+                
                 if let isCorrect = isCorrect {
                     Image(systemName: isCorrect ? "checkmark.circle.fill" : "xmark.circle.fill")
                         .resizable()
@@ -73,12 +74,14 @@ struct ContentView: View {
 
     func startTimer() {
         timer?.invalidate()
-        timer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { _ in
+        timer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false) { _ in
             handleTimeout()
         }
     }
 
     func checkAnswer(isPrime: Bool) {
+        timer?.invalidate()
+        
         if isPrime == isNumberPrime(number) {
             correctCount += 1
             isCorrect = true
@@ -108,6 +111,7 @@ struct ContentView: View {
         } else {
             number = Int.random(in: 1...100)
             isCorrect = nil
+            startTimer()
         }
     }
 
