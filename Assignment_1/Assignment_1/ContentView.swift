@@ -10,7 +10,7 @@ struct ContentView: View {
     
     var body: some View {
         VStack(spacing: 30) {
-            Text("Is this a number prime?")
+            Text("Is this number prime?")
                 .font(.largeTitle)
                 .bold()
             
@@ -28,11 +28,21 @@ struct ContentView: View {
                     checkAnswer(isPrime: false)
                 }
                 .buttonStyle(CustomButtonStyle(color: .red))
+            }
         }
         func checkAnswer(isPrime: Bool) {
-                
+                if isPrime == isNumberPrime(number) {
+                    correctCount += 1
+                    isCorrect = true
+                } else {
+                    wrongCount += 1
+                    isCorrect = false
+                }
+
+                attempts += 1
             }
         func isNumberPrime( num: Int) -> Bool {
+            if num < 2 { return false }
             for i in 2..<num {
                 if num % i == 0 {
                     return false
@@ -43,17 +53,22 @@ struct ContentView: View {
     }
     }
     
-    struct CustomButtonStyle: ButtonStyle {
-        var color: Color
+        struct CustomButtonStyle: ButtonStyle {
+            var color: Color
 
-        func makeBody(configuration: Configuration) -> some View {
-            configuration.label
-                .padding()
-                .frame(width: 150)
-                .background(color)
-                .foregroundColor(.white)
-                .cornerRadius(10)
-                .scaleEffect(configuration.isPressed ? 0.9 : 1.0)
+            func makeBody(configuration: Configuration) -> some View {
+                configuration.label
+                    .padding()
+                    .frame(width: 150)
+                    .background(color)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+                    .scaleEffect(configuration.isPressed ? 0.9 : 1.0)
+            }
         }
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
     }
 }
+
